@@ -1,19 +1,30 @@
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { Header } from "../components/Header";
 
 export const Route = createRootRoute({
 	component: () => (
 		<>
-			<div className="p-2 flex gap-2">
-				<Link to="/" className="[&.active]:font-bold">
-					Home
-				</Link>{" "}
-				<Link to="/about" className="[&.active]:font-bold">
-					About
-				</Link>
+			<div className="min-h-screen bg-gradient-to-br from-indigo-500 to-purple-700 p-5 flex flex-col justify-center items-center">
+				<div className="max-w-6xl w-full bg-white rounded-xl shadow-2xl overflow-hidden">
+					<Header />
+					<main className="p-0">
+						<Outlet />
+					</main>
+					<footer className="bg-gradient-to-r from-gray-700 to-gray-900 text-gray-200 text-center p-4 text-sm border-t border-gray-600">
+						Copyright{" "}
+						<a
+							href="https://mrluthercodes.netlify.app/"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="text-blue-300 hover:text-white underline"
+						>
+							Mr Luther
+						</a>{" "}
+						2025
+					</footer>
+				</div>
 			</div>
-			<hr />
-			<Outlet />
 			<TanStackRouterDevtools />
 		</>
 	),
