@@ -9,7 +9,7 @@ import { useQuizLogic } from "@/hooks/useQuizLogic";
 import type { AddressType } from "@/lib/addressGenerator";
 import { generateRandomAddress } from "@/lib/addressGenerator";
 import { ScoreManager } from "@/lib/scoreManager";
-import { getSiteConfig } from "@/lib/siteConfig";
+import { SITE_CONFIG } from "@/lib/siteConfig";
 
 export const Route = createFileRoute("/")({
 	component: Index,
@@ -41,7 +41,7 @@ const ANSWER_TO_TYPE: Record<number, AddressType> = {
 
 function Index() {
 	// Site configuration
-	const siteConfig = getSiteConfig("network-addresses");
+	const siteConfig = SITE_CONFIG;
 
 	// Score manager
 	const [scoreManager] = useState(() => new ScoreManager(siteConfig.siteKey));

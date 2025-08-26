@@ -10,9 +10,8 @@ import { QuizFramework } from "../components/reusable/QuizFramework";
 import { QuizLayout } from "../components/reusable/QuizLayout";
 import { StatsModal } from "../components/reusable/StatsModal";
 import { ScoreButton } from "../components/ScoreButton";
-import { detectCurrentSite } from "../lib/navigationConfig";
 import { ScoreManager } from "../lib/scoreManager";
-import { getSiteConfig } from "../lib/siteConfig";
+import { SITE_CONFIG } from "../lib/siteConfig";
 
 // Example: Number Systems Quiz Implementation
 interface NumberSystemQuestion {
@@ -39,8 +38,7 @@ const QUIZ_ANSWERS = [
  */
 export function NumberSystemsQuiz() {
 	// 1. Get site configuration
-	const currentSiteKey = detectCurrentSite();
-	const siteConfig = getSiteConfig(currentSiteKey);
+	const siteConfig = SITE_CONFIG;
 
 	// Score manager
 	const [scoreManager] = useState(() => new ScoreManager(siteConfig.siteKey));

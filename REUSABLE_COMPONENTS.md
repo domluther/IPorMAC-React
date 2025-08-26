@@ -141,7 +141,6 @@ const customSite: SiteConfig = {
   subtitle: "Learn something awesome",
   icon: "🧠",
   primaryColor: "blue",
-  navigation: DEFAULT_NAVIGATION,
   scoring: {
     pointsPerCorrect: 10,
     pointsPerIncorrect: -2,
