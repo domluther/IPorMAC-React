@@ -1,14 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { GenericHintPanel } from "@/components/reusable/GenericHintPanel";
-import { QuizLayout, SimpleQuizBody } from "@/components/reusable";
-import { QuizButton } from "@/components/reusable/QuizButton";
-import { StatsModal } from "@/components/reusable/StatsModal";
-import { ScoreButton } from "@/components/reusable/ScoreButton";
+import { QuizLayout, SimpleQuizBody } from "@/components";
+import { HintPanel } from "@/components/HintPanel";
+import { QuizButton } from "@/components/QuizButton";
+import { ScoreButton } from "@/components/ScoreButton";
+import { StatsModal } from "@/components/StatsModal";
 import { useQuizLogic } from "@/hooks/useQuizLogic";
 import type { AddressType } from "@/lib/addressGenerator";
 import { generateRandomAddress } from "@/lib/addressGenerator";
-import { NETWORK_ADDRESS_HINTS } from "@/lib/networkAddressHints";
 import { ScoreManager } from "@/lib/scoreManager";
 import { SITE_CONFIG } from "@/lib/siteConfig";
 
@@ -45,7 +44,9 @@ function Index() {
 	const siteConfig = SITE_CONFIG;
 
 	// Score manager
-	const [scoreManager] = useState(() => new ScoreManager(siteConfig.siteKey));
+	const [scoreManager] = useState(
+		() => new ScoreManager(siteConfig.siteKey, siteConfig.scoring.customLevels),
+	);
 
 	// Quiz state - Network Address specific
 	const [currentQuestion, setCurrentQuestion] =
@@ -170,10 +171,10 @@ function Index() {
 			<QuizButton variant="secondary" onClick={() => setShowHints(!showHints)}>
 				{showHints ? "Hide" : "Show"} Address Format Rules
 			</QuizButton>
-			<GenericHintPanel 
-				isVisible={showHints} 
+			<HintPanel
+				isVisible={showHints}
 				title="📝 Address Format Rules:"
-				items={NETWORK_ADDRESS_HINTS}
+				items={siteConfig.hints || []}
 			/>
 		</div>
 	);

@@ -1,11 +1,37 @@
 import { cn } from "@/lib/utils";
 
-interface HintPanelProps {
-	isVisible: boolean;
+export interface HintItem {
+	title: string;
+	description: string;
+	examples: string[];
+	color: "blue" | "purple" | "green" | "yellow" | "red";
 }
 
-export function HintPanel({ isVisible }: HintPanelProps) {
+interface HintPanelProps {
+	isVisible: boolean;
+	title?: string;
+	items: HintItem[];
+}
+
+/**
+ * Generic help panel component for GCSE CS practice sites
+ * Displays format rules, examples, or any educational content
+ * Toggleable visibility with smooth transitions and color-coded sections
+ */
+export function HintPanel({
+	isVisible,
+	title = "📝 Help & Rules:",
+	items,
+}: HintPanelProps) {
 	if (!isVisible) return null;
+
+	const colorClasses = {
+		blue: "font-semibold text-blue-700",
+		purple: "font-semibold text-purple-700",
+		green: "font-semibold text-green-700",
+		yellow: "font-semibold text-yellow-700",
+		red: "font-semibold text-red-700",
+	};
 
 	return (
 		<div
@@ -17,41 +43,22 @@ export function HintPanel({ isVisible }: HintPanelProps) {
 					: "opacity-0 max-h-0 overflow-hidden",
 			)}
 		>
-			<h3 className="text-lg font-bold text-yellow-800 mb-4">
-				📝 Address Format Rules:
-			</h3>
+			<h3 className="text-lg font-bold text-yellow-800 mb-4">{title}</h3>
 			<ul className="space-y-4 text-gray-700">
-				<li className="flex flex-col gap-1">
-					<div className="font-semibold text-blue-700">IPv4:</div>
-					<div className="text-sm">
-						4 decimal numbers (0-255) separated by dots
-					</div>
-					<div className="text-sm text-gray-600 bg-gray-100 rounded px-2 py-1 font-mono">
-						Example: 192.168.1.1
-					</div>
-				</li>
-				<li className="flex flex-col gap-1">
-					<div className="font-semibold text-purple-700">IPv6:</div>
-					<div className="text-sm">
-						8 groups of 4 hex digits separated by colons. Groups can be empty or
-						compressed.
-					</div>
-					<div className="text-sm text-gray-600 bg-gray-100 rounded px-2 py-1 font-mono">
-						Example: 2001:0db8:85a3:0000:0000:8a2e:0370:7334
-					</div>
-					<div className="text-sm text-gray-600 bg-gray-100 rounded px-2 py-1 font-mono">
-						Compressed: 2001:db8::8a2e:370:7334
-					</div>
-				</li>
-				<li className="flex flex-col gap-1">
-					<div className="font-semibold text-green-700">MAC:</div>
-					<div className="text-sm">
-						6 pairs of hex digits separated by colons or dashes
-					</div>
-					<div className="text-sm text-gray-600 bg-gray-100 rounded px-2 py-1 font-mono">
-						Example: 00:1A:2B:3C:4D:5E or 00-1A-2B-3C-4D-5E
-					</div>
-				</li>
+				{items.map((item) => (
+					<li key={item.title} className="flex flex-col gap-1">
+						<div className={colorClasses[item.color]}>{item.title}:</div>
+						<div className="text-sm">{item.description}</div>
+						{item.examples.map((example) => (
+							<div
+								key={example}
+								className="text-sm text-gray-600 bg-gray-100 rounded px-2 py-1 font-mono"
+							>
+								{example}
+							</div>
+						))}
+					</li>
+				))}
 			</ul>
 		</div>
 	);

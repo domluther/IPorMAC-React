@@ -1,17 +1,17 @@
 import { useCallback, useEffect } from "react";
+import { QuizButton } from "@/components/QuizButton";
 import type { useQuizLogic } from "@/hooks/useQuizLogic";
-import { QuizButton } from "./QuizButton";
 
 /**
  * Reusable quiz body component for GCSE CS practice sites
- * 
+ *
  * Provides standard quiz UI with:
  * - Streak display with animated emojis
  * - Question rendering area
  * - Multiple choice answer buttons with keyboard shortcuts
  * - Feedback display with explanations
  * - Optional help section
- * 
+ *
  * Usage: Pass quiz logic hook, question data, and customization functions.
  * The component handles all UI state and interactions automatically.
  */

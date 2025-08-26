@@ -25,56 +25,59 @@ export class ScoreManager {
 	private streakKey: string;
 	private scores: Record<string, ScoreData> = {};
 	private streak: number = 0;
+	private levels: LevelInfo[];
 
-	private levels: LevelInfo[] = [
+	// Default generic levels that can be used as fallback
+	private static readonly DEFAULT_LEVELS: LevelInfo[] = [
 		{
 			emoji: "🥚",
-			title: "Network Newbie",
-			description: "Just hatched into networking!",
+			title: "Beginner",
+			description: "Just getting started!",
 			minPoints: 0,
 			minAccuracy: 0,
 		},
 		{
 			emoji: "🐣",
-			title: "Address Apprentice",
-			description: "Taking your first paddle through IP waters!",
+			title: "Novice",
+			description: "Making progress!",
 			minPoints: 5,
 			minAccuracy: 0,
 		},
 		{
 			emoji: "🐤",
-			title: "Protocol Paddler",
-			description: "Your address recognition is making waves!",
+			title: "Learner",
+			description: "Building confidence!",
 			minPoints: 12,
 			minAccuracy: 60,
 		},
 		{
 			emoji: "🦆",
-			title: "Network Navigator",
-			description: "Swimming confidently through address formats!",
+			title: "Skilled",
+			description: "Getting the hang of it!",
 			minPoints: 25,
 			minAccuracy: 70,
 		},
 		{
 			emoji: "🦆✨",
-			title: "Packet Pond Master",
-			description: "Soaring above the subnet with elegant identification!",
+			title: "Expert",
+			description: "Impressive skills!",
 			minPoints: 50,
 			minAccuracy: 80,
 		},
 		{
 			emoji: "🪿👑",
-			title: "Golden Gateway Guru",
-			description: "The legendary address whisperer of the network!",
+			title: "Master",
+			description: "Absolute mastery achieved!",
 			minPoints: 75,
 			minAccuracy: 90,
 		},
 	];
 
-	constructor(siteKey = "network-addresses") {
+	constructor(siteKey = "generic-quiz", customLevels?: LevelInfo[]) {
 		this.siteKey = siteKey;
 		this.storageKey = `gcse-cs-scores-${this.siteKey}`;
 		this.streakKey = `${this.storageKey}-streak`;
+		this.levels = customLevels || ScoreManager.DEFAULT_LEVELS;
 		this.scores = this.loadScores();
 		this.streak = this.loadStreak();
 	}

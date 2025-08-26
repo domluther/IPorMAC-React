@@ -3,6 +3,10 @@
  * Export all reusable components for easy importing
  */
 
+export { Footer } from "./Footer";
+export { Header } from "./Header";
+export type { HintItem } from "./HintPanel";
+export { HintPanel } from "./HintPanel";
 export type {
 	QuizButtonProps,
 	QuizButtonSize,
@@ -11,16 +15,12 @@ export type {
 export { QuizButton } from "./QuizButton";
 // Layout Components
 export { QuizLayout } from "./QuizLayout";
-export { Header } from "./Header";
-export { Footer } from "./Footer";
+// Utility Components
+export { ScoreButton } from "./ScoreButton";
 export type { QuizAnswer, SimpleQuizBodyProps } from "./SimpleQuizBody";
 // Quiz Body Components
 export { SimpleQuizBody } from "./SimpleQuizBody";
-export { SiteNavigation } from "./SiteNavigation"; 
-// Utility Components
-export { ScoreButton } from "./ScoreButton";
-export type { HintItem } from "./GenericHintPanel";
-export { GenericHintPanel } from "./GenericHintPanel";
+export { SiteNavigation } from "./SiteNavigation";
 // Modal Components
 export { StatsModal } from "./StatsModal";
 
@@ -33,8 +33,8 @@ export { StatsModal } from "./StatsModal";
  *   StatsModal,
  *   QuizButton,
  *   ScoreButton,
- *   GenericHintPanel,
+ *   HintPanel,
  *   Header,
  *   Footer
- * } from "@/components/reusable";
+ * } from "@/components";
  */

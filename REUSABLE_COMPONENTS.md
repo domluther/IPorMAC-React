@@ -7,7 +7,7 @@ A comprehensive set of reusable React components for creating consistent GCSE Co
 ### 1. Basic Site Setup
 
 ```tsx
-import { QuizLayout } from "@/components/reusable/QuizLayout";
+import { QuizLayout } from "@/components/QuizLayout";
 import { getSiteConfig, detectCurrentSite } from "@/lib/siteConfig";
 
 export function MyQuizSite() {
@@ -28,8 +28,8 @@ export function MyQuizSite() {
 ### 2. Full Quiz Implementation
 
 ```tsx
-import { QuizFramework } from "@/components/reusable/QuizFramework";
-import { StatsModal } from "@/components/reusable/StatsModal";
+import { QuizFramework } from "@/components/QuizFramework";
+import { StatsModal } from "@/components/StatsModal";
 import { ScoreManager } from "@/lib/scoreManager";
 
 // See examples/NumberSystemsQuiz.tsx for complete example

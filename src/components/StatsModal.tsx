@@ -1,10 +1,10 @@
 import { X } from "lucide-react";
 import { useEffect, useId } from "react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
 import type { ScoreManager } from "@/lib/scoreManager";
 import { cn } from "@/lib/utils";
-import { Button } from "../ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Progress } from "../ui/progress";
 
 interface StatsModalProps {
 	isOpen: boolean;
