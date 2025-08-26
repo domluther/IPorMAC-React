@@ -17,20 +17,28 @@ This is a **production-ready React template** with the following tech stack:
 
 ```
 ├── src/
-│   ├── routes/           # File-based routing (TanStack Router)
-│   │   ├── __root.tsx    # Root layout component
-│   │   ├── index.tsx     # Home page (/)
-│   │   └── about.tsx     # About page (/about)
-│   ├── lib/
-│   │   └── utils.ts      # Utility functions (cn helper for Tailwind)
+│   ├── routes/              # File-based routing (TanStack Router)
+│   │   ├── __root.tsx       # Root layout component
+│   │   └── index.tsx        # Home page (/)
+│   ├── components/          # React components
+│   │   ├── ui/             # UI primitives (shadcn/ui)
+│   │   ├── *.tsx           # Custom components
+│   │   └── index.ts        # Component exports
+│   ├── hooks/              # Custom React hooks
+│   │   ├── *.ts            # Hook files
+│   │   └── index.ts        # Hook exports  
+│   ├── lib/                # Utilities and business logic
+│   │   ├── utils.ts        # Utility functions (cn helper)
+│   │   ├── siteConfig.ts   # Site configuration
+│   │   ├── scoreManager.ts # Score management
+│   │   └── *.ts            # Other utilities
 │   ├── test/
-│   │   ├── setup.ts      # Test configuration
-│   │   └── example.test.tsx # Example tests
-│   ├── assets/           # Static assets
-│   ├── main.tsx          # App entry point
-│   └── index.css         # Global styles + Tailwind
-├── public/               # Public static files
-└── dist/                 # Build output (generated)
+│   │   ├── setup.ts        # Test configuration
+│   │   └── *.test.tsx      # Test files
+│   ├── main.tsx            # App entry point
+│   └── index.css           # Global styles + Tailwind
+├── public/                 # Public static files
+└── dist/                   # Build output (generated)
 ```
 
 ## Key Configuration Files
@@ -167,7 +175,74 @@ function UserProfile({ userId }: { userId: string }) {
 }
 ```
 
-### 7. **Testing Migration**
+### 7. **This Project's Architecture Patterns**
+
+This template implements several specific patterns for GCSE CS quiz applications:
+
+#### **Site Configuration Pattern**
+```tsx
+// Define site-specific configuration
+export const SITE_CONFIG: SiteConfig = {
+  siteKey: "my-quiz",
+  title: "Quiz Title",
+  subtitle: "Quiz Description", 
+  icon: "🧠",
+  scoring: {
+    pointsPerCorrect: 10,
+    pointsPerIncorrect: -2,
+    customLevels: [ /* custom level progression */ ]
+  },
+  hints: [ /* site-specific help content */ ]
+};
+```
+
+#### **Generic ScoreManager**
+```tsx
+// Create score manager with custom levels
+const scoreManager = new ScoreManager(
+  siteConfig.siteKey,
+  siteConfig.scoring.customLevels
+);
+```
+
+#### **Quiz Logic Hook Pattern**
+```tsx
+// Reusable quiz state management
+const quizLogic = useQuizLogic({
+  scoreManager,
+  onQuestionGenerate: () => {
+    // Generate new question logic
+  },
+  correctPoints: 100,
+  maxPoints: 100,
+});
+```
+
+#### **Component Composition Pattern**
+```tsx
+// Compose reusable components with configuration
+<QuizLayout title={siteConfig.title} subtitle={siteConfig.subtitle}>
+  <SimpleQuizBody
+    quizLogic={quizLogic}
+    currentQuestion={currentQuestion}
+    answers={answers}
+    questionRenderer={customRenderer}
+    isCorrectAnswer={customValidator}
+    generateFeedback={customFeedback}
+    helpSection={<HintPanel items={siteConfig.hints || []} />}
+  />
+</QuizLayout>
+```
+
+#### **Absolute Import Pattern**
+```tsx
+// Use absolute imports throughout
+import { QuizLayout } from "@/components/QuizLayout";
+import { SITE_CONFIG } from "@/lib/siteConfig";
+import { useQuizLogic } from "@/hooks/useQuizLogic";
+```
+
+### 8. **Testing Migration**
 
 **Convert existing tests to Vitest + Testing Library:**
 

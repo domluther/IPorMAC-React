@@ -54,6 +54,12 @@ A modern React application for learning and practicing network address identific
 - `npm run lint` - Check code quality
 - `npm run format` - Format code
 - `npm run type-check` - Check TypeScript types
+- `npm run preview` - Preview production build
+- `npm run test` - Run tests
+- `npm run test:ui` - Run tests with UI
+- `npm run lint` - Check code quality
+- `npm run format` - Format code
+- `npm run type-check` - Check TypeScript types
 
 ## 🎯 How to Use
 
@@ -93,18 +99,31 @@ Progress through duck-themed levels based on your performance:
 
 ```
 src/
-├── components/           # React components
-│   ├── ScoreModal.tsx   # Score tracking and statistics
-│   ├── SiteNavigation.tsx # Navigation to other tools
-│   └── HintPanel.tsx    # Address format reference
-├── lib/                 # Utilities and business logic
+├── components/              # React components
+│   ├── ui/                 # UI primitives (shadcn/ui)
+│   ├── Footer.tsx          # Site footer
+│   ├── Header.tsx          # Site header with navigation
+│   ├── HintPanel.tsx       # Address format reference
+│   ├── QuizButton.tsx      # Custom button component
+│   ├── QuizLayout.tsx      # Main layout wrapper
+│   ├── ScoreButton.tsx     # Score display button
+│   ├── SimpleQuizBody.tsx  # Quiz interface
+│   ├── SiteNavigation.tsx  # Navigation menu
+│   ├── StatsModal.tsx      # Statistics modal
+│   └── index.ts            # Component exports
+├── hooks/                  # Custom React hooks
+│   ├── useQuizLogic.ts     # Quiz state management
+│   └── index.ts            # Hook exports
+├── lib/                    # Utilities and business logic
 │   ├── addressGenerator.ts # Address generation logic
+│   ├── navigationConfig.ts # Navigation configuration
 │   ├── scoreManager.ts     # Score tracking and levels
-│   └── utils.ts           # Shared utilities
-├── routes/              # File-based routing
-│   ├── __root.tsx       # Root layout
-│   └── index.tsx        # Main quiz page
-└── assets/              # Static assets
+│   ├── siteConfig.ts       # Site configuration
+│   └── utils.ts            # Shared utilities
+├── routes/                 # File-based routing
+│   ├── __root.tsx          # Root layout
+│   └── index.tsx           # Main quiz page
+└── test/                   # Test files
 ```
 
 ## 🎨 Styling
@@ -131,6 +150,20 @@ npm run test:run    # Run tests once
 npm run test:ui     # Run tests with UI
 ```
 
+## 🏗️ Architecture Highlights
+
+### Component Library Structure
+- **Reusable Components**: All components are generic and configurable via props
+- **Site Configuration**: Centralized config in `siteConfig.ts` with hints and custom levels
+- **Generic ScoreManager**: Accepts custom level systems for different quiz types
+- **Absolute Imports**: Consistent `@/` imports throughout the codebase
+
+### Key Features
+- **Generic Quiz Logic**: `useQuizLogic` hook handles common quiz patterns
+- **Configurable Hints**: Site-specific help content in configuration
+- **Custom Level Systems**: Each site can define its own progression themes
+- **Type Safety**: Full TypeScript coverage with proper interfaces
+
 ## 🔄 Migration from Legacy Version
 
 This React version replaces the vanilla JavaScript version with:
@@ -146,14 +179,12 @@ This React version replaces the vanilla JavaScript version with:
 
 ### ⚡ Improvements
 - Modern React architecture with TypeScript
-- Better responsive design
-- Enhanced accessibility
-- Improved code maintainability
-- Better error handling
-- Modern development tooling
-
-### 📁 Legacy Files
-The original vanilla JavaScript version is preserved in the `legacy/` folder for reference.
+- Generic, reusable component library
+- Configurable site settings and level systems
+- Better responsive design and accessibility
+- Improved code maintainability and error handling
+- Modern development tooling (Vite, Biome)
+- Absolute import paths for better refactoring
 
 ## 🌐 Related Projects
 
@@ -178,81 +209,8 @@ Created by [Mr Luther](https://mrluthercodes.netlify.app/) - 2025
 
 ## 🐛 Bug Reports
 
-If you find any bugs or have suggestions for improvements, please open an issue on the repository.
-
 ---
 
 Happy learning! 🦆📚
-
-```bash
-npm run type-check
-```
-
-### Testing
-
-```bash
-# Run tests in watch mode
-npm run test
-
-# Run tests once
-npm run test:run
-
-# Run tests with UI
-npm run test:ui
-```
-
-## Project Structure
-
-- `src/` — Main source code
-- `routes/` — App routes (using TanStack React Router)
-- `lib/` — Utility functions
-- `public/` — Static assets
-
-## Installed Packages
-
-**Dependencies:**
-- react, react-dom
-- @tanstack/react-router, @tanstack/react-router-devtools
-- @tailwindcss/vite, tailwindcss, tailwind-merge
-- lucide-react
-- clsx, class-variance-authority
-
-**DevDependencies:**
-- vite, @vitejs/plugin-react-swc
-- typescript, @types/react, @types/react-dom, @types/node
-- @biomejs/biome
-- @tanstack/router-plugin
-- tw-animate-css
-- vitest, @vitest/ui, jsdom
-- @testing-library/react, @testing-library/jest-dom
-- globals
-
-## Linting & Formatting
-
-This template uses [Biome](https://biomejs.dev/) for linting and formatting. See `biome.json` for configuration.
-
-## Routing
-
-App routes are defined in `src/routes/` using TanStack React Router. See [TanStack Router docs](https://tanstack.com/router/v1/docs/overview) for usage.
-
-## Tailwind CSS
-
-Tailwind is configured via `@tailwindcss/vite` and supports advanced merging and animation utilities.
-
-## Documentation for AI Agents
-
-This template includes comprehensive documentation for AI agents to port existing projects:
-
-- **[AI_AGENT_GUIDE.md](./AI_AGENT_GUIDE.md)** - Complete migration guide for AI agents
-- **[MIGRATION_CHECKLIST.md](./MIGRATION_CHECKLIST.md)** - Step-by-step checklist for project migration
-- **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - API references and code patterns
-
-These docs are specifically designed to help future AI agents (Claude Sonnet 4+) understand how to port legacy projects to this modern React template.
-
----
-
-## Customization
-
-You can further expand linting, formatting, and routing as needed. For advanced ESLint rules, see [Biome documentation](https://biomejs.dev/docs/linting/).
 
 

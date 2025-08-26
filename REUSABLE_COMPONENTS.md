@@ -8,10 +8,10 @@ A comprehensive set of reusable React components for creating consistent GCSE Co
 
 ```tsx
 import { QuizLayout } from "@/components/QuizLayout";
-import { getSiteConfig, detectCurrentSite } from "@/lib/siteConfig";
+import { SITE_CONFIG } from "@/lib/siteConfig";
 
 export function MyQuizSite() {
-  const siteConfig = getSiteConfig("my-site-key");
+  const siteConfig = SITE_CONFIG;
   
   return (
     <QuizLayout
@@ -28,15 +28,25 @@ export function MyQuizSite() {
 ### 2. Full Quiz Implementation
 
 ```tsx
-import { QuizFramework } from "@/components/QuizFramework";
+import { SimpleQuizBody } from "@/components/SimpleQuizBody";
 import { StatsModal } from "@/components/StatsModal";
 import { ScoreManager } from "@/lib/scoreManager";
+import { useQuizLogic } from "@/hooks/useQuizLogic";
 
-// See examples/NumberSystemsQuiz.tsx for complete example
+// See src/routes/index.tsx for complete example
 ```
 
 ## 📦 Components
 
+### Core Layout Components
+
+#### `QuizLayout`
+Main layout wrapper providing consistent header, navigation, and structure.
+
+**Props:**
+- `title: string` - Site title
+- `subtitle: string` - Site description  
+- `titleIcon?: string` - Icon/emoji (default: "🎓")
 ### Core Layout Components
 
 #### `QuizLayout`
@@ -55,31 +65,31 @@ Configurable header with responsive typography and score button positioning.
 **Props:**
 - `title?: string` - Header title
 - `subtitle?: string` - Header subtitle
+- `titleIcon?: string` - Header icon/emoji
 - `scoreButton?: ReactNode` - Score button component
 
 ### Interactive Components
 
-#### `QuizFramework<T>`
-Generic quiz framework handling questions, answers, feedback, and keyboard shortcuts.
+#### `SimpleQuizBody<T>`
+Generic quiz component handling questions, answers, feedback, and keyboard shortcuts.
 
 **Props:**
-- `question: QuizQuestion<T>` - Current question data
+- `quizLogic: ReturnType<typeof useQuizLogic>` - Quiz state from hook
+- `currentQuestion: T | null` - Current question data
 - `answers: QuizAnswer[]` - Answer options
-- `questionRenderer: (content: T) => ReactNode` - Custom question renderer
-- `onAnswerSelect: (answerId: number) => void` - Answer selection handler
-- `onNextQuestion: () => void` - Next question handler
-- `feedback?: FeedbackState` - Answer feedback
-- `streak?: number` - Current streak count
-- `hintPanel?: ReactNode` - Optional hints
-- `showHints?: boolean` - Hint visibility
-- `onToggleHints?: () => void` - Toggle hints
+- `questionRenderer: (question: T) => ReactNode` - Custom question renderer
+- `isCorrectAnswer: (answerId: number, question: T) => boolean` - Answer validator
+- `generateFeedback: (isCorrect: boolean, answerId: number, question: T) => { message: string; explanation?: string }` - Feedback generator
+- `title?: string` - Quiz title
+- `showStreakEmojis?: boolean` - Show streak visualization
+- `helpSection?: ReactNode` - Optional help content
 
 **Features:**
-- ✅ Keyboard shortcuts (1-9 for answers, Enter/Space for next)
-- ✅ Automatic feedback display
-- ✅ Streak tracking
-- ✅ Responsive design
-- ✅ Loading states
+- ✅ Keyboard shortcuts (1-4 for answers, Enter/Space for next)
+- ✅ Automatic feedback display with explanations
+- ✅ Streak tracking with emoji visualization
+- ✅ Responsive design with proper mobile support
+- ✅ Loading states and smooth transitions
 
 #### `StatsModal`
 Comprehensive statistics modal showing progress, levels, and breakdowns.
@@ -88,38 +98,57 @@ Comprehensive statistics modal showing progress, levels, and breakdowns.
 - `isOpen: boolean` - Modal visibility
 - `onClose: () => void` - Close handler
 - `scoreManager: ScoreManager` - Score manager instance
-- `title?: string` - Modal title
-- `headerIcon?: string` - Header icon
+- `title?: string` - Modal title (default: "Quiz Statistics")
 
 **Features:**
-- ✅ Level progression display
-- ✅ Overall statistics grid
-- ✅ Category-wise breakdown
+- ✅ Level progression display with custom levels
+- ✅ Overall statistics grid (attempts, accuracy, points)
+- ✅ Category-wise breakdown (by address type, etc.)
 - ✅ Progress bars and visual feedback
 - ✅ Reset scores functionality
 
 ### Navigation Components
 
-#### `SiteNavigationV2`
-Enhanced navigation using shadcn/ui dropdown with responsive design.
+#### `SiteNavigation`
+Navigation dropdown using shadcn/ui with responsive design.
 
 **Props:**
-- `menuItems: NavMenuItem[]` - Navigation menu items
-- `currentSiteId?: string` - Current site identifier
-- `title?: string` - Navigation title
-- `icon?: string` - Navigation icon
-- `compact?: boolean` - Compact mode
+- Internal component - configured via `navigationConfig.ts`
 
 ### Utility Components
 
 #### `ScoreButton`
-Responsive score display button (already existing).
+Responsive score display button showing current level and points.
 
 **Props:**
 - `levelEmoji: string` - Level emoji
 - `levelTitle: string` - Level title
 - `points: number` - Current points
 - `onClick?: () => void` - Click handler
+
+#### `QuizButton`
+Enhanced button component with variants and keyboard shortcut display.
+
+**Props:**
+- `children: ReactNode` - Button content
+- `onClick?: () => void` - Click handler
+- `variant?: "primary" | "secondary"` - Button style variant
+- `size?: "sm" | "md" | "lg"` - Button size
+- `shortcut?: string` - Keyboard shortcut to display
+- All standard button props
+
+#### `HintPanel`
+Collapsible hint panel for displaying help content.
+
+**Props:**
+- `isVisible: boolean` - Panel visibility
+- `title: string` - Panel title
+- `items: HintItem[]` - Hint content items
+
+### Footer Component
+
+#### `Footer`
+Standard footer with copyright and links.
 
 ## 🔧 Configuration System
 
@@ -128,37 +157,45 @@ Responsive score display button (already existing).
 Create consistent site configurations using the `SiteConfig` interface:
 
 ```tsx
-import { SITE_CONFIGS, getSiteConfig, detectCurrentSite } from "@/lib/siteConfig";
+import { SITE_CONFIG } from "@/lib/siteConfig";
 
-// Get config for current site
-const currentSite = detectCurrentSite();
-const config = getSiteConfig(currentSite);
+// Current site configuration
+const config = SITE_CONFIG;
 
-// Define custom site
+// Site config structure
 const customSite: SiteConfig = {
   siteKey: "my-quiz",
   title: "My Quiz Site",
   subtitle: "Learn something awesome",
   icon: "🧠",
-  primaryColor: "blue",
   scoring: {
     pointsPerCorrect: 10,
     pointsPerIncorrect: -2,
-  }
+    customLevels: [
+      // Custom level progression...
+    ]
+  },
+  hints: [
+    // Site-specific help content...
+  ]
 };
 ```
 
 ### Score Management
 
-The `ScoreManager` class handles all scoring logic:
+The `ScoreManager` class handles all scoring logic and accepts custom level systems:
 
 ```tsx
 import { ScoreManager } from "@/lib/scoreManager";
 
-const scoreManager = new ScoreManager("my-site-key");
+// Create with custom levels from site config
+const scoreManager = new ScoreManager(
+  siteConfig.siteKey,
+  siteConfig.scoring.customLevels
+);
 
 // Record scores
-scoreManager.recordScore("question-1", 100, 100, "category-1");
+scoreManager.recordScore("question-1", 100, 100, "IPv4", "192.168.1.1");
 
 // Get statistics
 const stats = scoreManager.getOverallStats();
@@ -167,6 +204,26 @@ const breakdown = scoreManager.getScoresByType();
 // Manage streaks
 scoreManager.updateStreak(isCorrect);
 const currentStreak = scoreManager.getStreak();
+```
+
+### Quiz Logic Hook
+
+Use the `useQuizLogic` hook for consistent quiz behavior:
+
+```tsx
+import { useQuizLogic } from "@/hooks/useQuizLogic";
+
+const quizLogic = useQuizLogic({
+  scoreManager,
+  onQuestionGenerate: () => {
+    // Generate new question logic
+  },
+  correctPoints: 100,
+  maxPoints: 100,
+});
+
+// Access quiz state
+const { overallStats, currentStreak, handleAnswerSubmit, nextQuestion } = quizLogic;
 ```
 
 ## 🎨 Styling & Theming
@@ -194,11 +251,13 @@ Available animation classes:
 ```tsx
 // ✅ Good: Compose reusable components
 <QuizLayout title="My Quiz" subtitle="Learn stuff">
-  <QuizFramework
-    question={question}
+  <SimpleQuizBody
+    quizLogic={quizLogic}
+    currentQuestion={currentQuestion}
     answers={answers}
     questionRenderer={CustomRenderer}
-    onAnswerSelect={handleAnswer}
+    isCorrectAnswer={isCorrectAnswer}
+    generateFeedback={generateFeedback}
   />
 </QuizLayout>
 
@@ -214,7 +273,45 @@ interface MyQuestionType {
   difficulty: "easy" | "medium" | "hard";
 }
 
-<QuizFramework<MyQuestionType>
+// Use with SimpleQuizBody for full type safety
+<SimpleQuizBody<MyQuestionType>
+  currentQuestion={currentQuestion}
+  questionRenderer={(q) => <div>{q.content}</div>}
+  // ... other props
+/>
+```
+
+### 3. Configuration-Driven Development
+
+```tsx
+// ✅ Good: Use site configuration
+const siteConfig = SITE_CONFIG;
+
+<QuizLayout
+  title={siteConfig.title}
+  subtitle={siteConfig.subtitle}
+  titleIcon={siteConfig.icon}
+>
+  <HintPanel
+    items={siteConfig.hints || []}
+    // ... other props
+  />
+</QuizLayout>
+
+// ❌ Avoid: Hardcoding site-specific content
+```
+
+### 4. Absolute Imports
+
+```tsx
+// ✅ Good: Use absolute imports
+import { QuizLayout } from "@/components/QuizLayout";
+import { SITE_CONFIG } from "@/lib/siteConfig";
+import { useQuizLogic } from "@/hooks/useQuizLogic";
+
+// ❌ Avoid: Relative imports for cross-module dependencies
+import { QuizLayout } from "../../components/QuizLayout";
+```
   questionRenderer={(content) => <div>{content.content}</div>}
 />
 ```
@@ -223,7 +320,7 @@ interface MyQuestionType {
 
 ```tsx
 // ✅ Good: Use site configuration
-const config = getSiteConfig("my-site");
+const config = SITE_CONFIG;
 
 // ❌ Avoid: Hardcoded values
 const title = "Hardcoded Title";
@@ -251,9 +348,10 @@ Built-in keyboard support:
 ### From Legacy Components
 
 1. **Replace custom layout** with `QuizLayout`
-2. **Use `QuizFramework`** instead of custom quiz logic
+2. **Use `SimpleQuizBody` + `useQuizLogic`** instead of custom quiz logic
 3. **Switch to `StatsModal`** for statistics
 4. **Update site config** using the configuration system
+5. **Use absolute imports** (`@/components`) for consistency
 
 ### Example Migration
 
@@ -266,16 +364,20 @@ Built-in keyboard support:
   </main>
 </div>
 
-// After (reusable)
+// After (reusable with current architecture)
 <QuizLayout 
-  title="Quiz" 
-  subtitle="Description"
+  title={siteConfig.title} 
+  subtitle={siteConfig.subtitle}
+  titleIcon={siteConfig.icon}
   scoreButton={<ScoreButton />}
 >
-  <QuizFramework 
-    question={question}
+  <SimpleQuizBody
+    quizLogic={quizLogic}
+    currentQuestion={question}
     answers={answers}
-    // ... other props
+    questionRenderer={customRenderer}
+    isCorrectAnswer={customValidator}
+    generateFeedback={customFeedback}
   />
 </QuizLayout>
 ```
