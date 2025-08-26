@@ -5,6 +5,11 @@ interface ScoreButtonProps {
 	onClick: () => void;
 }
 
+/**
+ * Responsive score display button for quiz sites
+ * Shows current level, points, and opens stats modal when clicked
+ * Automatically adjusts layout for different screen sizes
+ */
 export function ScoreButton({
 	levelEmoji,
 	levelTitle,

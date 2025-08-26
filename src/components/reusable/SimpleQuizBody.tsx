@@ -1,17 +1,20 @@
 import { useCallback, useEffect } from "react";
 import type { useQuizLogic } from "@/hooks/useQuizLogic";
-import { QuizButton } from "./buttons";
+import { QuizButton } from "./QuizButton";
 
-// ============================================================================
-// SIMPLE QUIZ BODY COMPONENT - STEP 3 IMPLEMENTATION
-// ============================================================================
-//
-// This component encapsulates the common quiz UI pattern used by most GCSE CS sites.
-// It handles: streak display, question area, answer buttons, feedback, next button.
-//
-// Future agents: Use this component for simple multiple-choice quiz sites.
-// Customize only: question rendering, answer options, correctness logic, feedback messages.
-//
+/**
+ * Reusable quiz body component for GCSE CS practice sites
+ * 
+ * Provides standard quiz UI with:
+ * - Streak display with animated emojis
+ * - Question rendering area
+ * - Multiple choice answer buttons with keyboard shortcuts
+ * - Feedback display with explanations
+ * - Optional help section
+ * 
+ * Usage: Pass quiz logic hook, question data, and customization functions.
+ * The component handles all UI state and interactions automatically.
+ */
 
 export interface QuizAnswer {
 	id: number;
@@ -20,14 +23,15 @@ export interface QuizAnswer {
 }
 
 export interface SimpleQuizBodyProps<TQuestion> {
-	// Hook integration - provides all quiz state management
+	/** Quiz logic hook return value - manages all quiz state */
 	quizLogic: ReturnType<typeof useQuizLogic>;
 
-	// Question data
+	/** Current question data (null while loading) */
 	currentQuestion: TQuestion | null;
+	/** Available answer options with keyboard shortcuts */
 	answers: QuizAnswer[];
 
-	// Customization functions
+	/** Site-specific customization functions */
 	questionRenderer: (question: TQuestion) => React.ReactNode;
 	isCorrectAnswer: (answerId: number, question: TQuestion) => boolean;
 	generateFeedback: (
@@ -82,25 +86,28 @@ export function SimpleQuizBody<TQuestion>({
 		scoreManager,
 	} = quizLogic;
 
-	// Handle answer selection with site-specific logic
+	/**
+	 * Handles answer selection by combining site-specific logic with quiz hook
+	 * Generates feedback and updates quiz state when user selects an answer
+	 */
 	const handleAnswerSelect = useCallback(
 		(answerId: number) => {
 			if (!currentQuestion) return;
 
-			// Use site-specific correctness logic
+			// Evaluate answer using site-specific logic
 			const isCorrect = isCorrectAnswer(answerId, currentQuestion);
 
-			// Generate site-specific feedback
+			// Generate contextual feedback message
 			const feedbackData = generateFeedback(
 				isCorrect,
 				answerId,
 				currentQuestion,
 			);
 
-			// Use hook for scoring/streaks (handles the complex stuff)
+			// Update scoring and streaks via quiz logic hook
 			quizHandleAnswerSelect(answerId, isCorrect, currentQuestion);
 
-			// Set custom feedback message
+			// Display feedback to user
 			setQuizFeedback({
 				isCorrect,
 				message: feedbackData.message,

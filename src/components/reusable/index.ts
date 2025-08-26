@@ -7,16 +7,21 @@ export type {
 	QuizButtonProps,
 	QuizButtonSize,
 	QuizButtonVariant,
-} from "./buttons";
-export { QuizButton } from "./buttons";
-// Interactive Components
-export { QuizFramework } from "./QuizFramework";
+} from "./QuizButton";
+export { QuizButton } from "./QuizButton";
 // Layout Components
 export { QuizLayout } from "./QuizLayout";
+export { Header } from "./Header";
+export { Footer } from "./Footer";
 export type { QuizAnswer, SimpleQuizBodyProps } from "./SimpleQuizBody";
 // Quiz Body Components
 export { SimpleQuizBody } from "./SimpleQuizBody";
-export { SiteNavigation } from "./SiteNavigation"; // Button Components
+export { SiteNavigation } from "./SiteNavigation"; 
+// Utility Components
+export { ScoreButton } from "./ScoreButton";
+export type { HintItem } from "./GenericHintPanel";
+export { GenericHintPanel } from "./GenericHintPanel";
+// Modal Components
 export { StatsModal } from "./StatsModal";
 
 /**
@@ -24,9 +29,12 @@ export { StatsModal } from "./StatsModal";
  *
  * import {
  *   QuizLayout,
- *   QuizFramework,
+ *   SimpleQuizBody,
  *   StatsModal,
- *   QuizButton
- * } from "@/components/reusable";
+ *   QuizButton,
+ *   ScoreButton,
+ *   GenericHintPanel,
+ *   Header,
+ *   Footer
  * } from "@/components/reusable";
  */

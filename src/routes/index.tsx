@@ -1,13 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
-import { HintPanel } from "@/components/HintPanel";
+import { GenericHintPanel } from "@/components/reusable/GenericHintPanel";
 import { QuizLayout, SimpleQuizBody } from "@/components/reusable";
-import { QuizButton } from "@/components/reusable/buttons";
+import { QuizButton } from "@/components/reusable/QuizButton";
 import { StatsModal } from "@/components/reusable/StatsModal";
-import { ScoreButton } from "@/components/ScoreButton";
+import { ScoreButton } from "@/components/reusable/ScoreButton";
 import { useQuizLogic } from "@/hooks/useQuizLogic";
 import type { AddressType } from "@/lib/addressGenerator";
 import { generateRandomAddress } from "@/lib/addressGenerator";
+import { NETWORK_ADDRESS_HINTS } from "@/lib/networkAddressHints";
 import { ScoreManager } from "@/lib/scoreManager";
 import { SITE_CONFIG } from "@/lib/siteConfig";
 
@@ -52,22 +53,11 @@ function Index() {
 	const [showStatsModal, setShowStatsModal] = useState(false);
 	const [showHints, setShowHints] = useState(false);
 
-	// ============================================================================
-	// STEP 3: USING useQuizLogic HOOK + SimpleQuizBody COMPONENT
-	// ============================================================================
-	//
-	// This demonstrates the final pattern for creating GCSE CS quiz sites:
-	// 1. Configure useQuizLogic hook with site-specific question generation
-	// 2. Create site-specific rendering and feedback functions
-	// 3. Use SimpleQuizBody component for all common UI (90% less code!)
-	// 4. Add optional help sections for hints/rules
-	//
-	// Future agents: This is the standard pattern to follow for all quiz sites.
-	//
+	// Quiz state management using reusable hook
 	const quizLogic = useQuizLogic({
 		scoreManager,
 		onQuestionGenerate: () => {
-			// Generate new Network Address question
+			// Generate new Network Address question when needed
 			const addressData = generateRandomAddress();
 			setCurrentQuestion({
 				address: addressData.address,
@@ -76,21 +66,18 @@ function Index() {
 				invalidReason: addressData.invalidReason,
 			});
 		},
-		// Network Address questions are simple multiple choice (100 points or 0 points)
-		// For trace tables, use different values like correctPoints: 1, maxPoints: 20
+		// Network Address scoring: 100 points per correct answer
 		correctPoints: 100,
 		maxPoints: 100,
 	});
 
-	// Extract quiz state for the ScoreButton and StatsModal
+	// Extract state for UI components
 	const { overallStats } = quizLogic;
 
-	// ============================================================================
-	// SITE-SPECIFIC CUSTOMIZATION FUNCTIONS
-	// ============================================================================
-	//
-	// Future agents: These are the only functions you need to customize per site:
-	//
+	/**
+	 * Site-specific customization functions for Network Address Practice
+	 * These functions define the unique behavior for this quiz type
+	 */
 
 	// Generate initial question (hook handles subsequent ones via onQuestionGenerate)
 	const generateNewQuestion = useCallback(() => {
@@ -103,7 +90,10 @@ function Index() {
 		});
 	}, []);
 
-	// Question renderer - Network Address specific styling
+	/**
+	 * Renders a network address question with distinctive styling
+	 * Uses monospace font and gradient background for address visibility
+	 */
 	const questionRenderer = useCallback(
 		(question: NetworkAddressQuestion) => (
 			<div className="font-mono text-2xl sm:text-3xl text-center p-6 sm:p-8 bg-gradient-to-br from-indigo-500 via-purple-600 to-purple-700 text-white rounded-xl border-3 border-indigo-600 shadow-lg font-semibold tracking-wider break-all">
@@ -113,7 +103,10 @@ function Index() {
 		[],
 	);
 
-	// Correctness logic - Network Address specific
+	/**
+	 * Determines if the selected answer matches the correct address type
+	 * Maps answer IDs to address types for validation
+	 */
 	const isCorrectAnswer = useCallback(
 		(answerId: number, question: NetworkAddressQuestion) => {
 			const selectedType = ANSWER_TO_TYPE[answerId];
@@ -122,7 +115,10 @@ function Index() {
 		[],
 	);
 
-	// Feedback generation - Network Address specific messages
+	/**
+	 * Generates contextual feedback messages based on answer correctness
+	 * Provides specific explanations for each address type and invalid addresses
+	 */
 	const generateFeedback = useCallback(
 		(
 			isCorrect: boolean,
@@ -162,19 +158,23 @@ function Index() {
 		[],
 	);
 
-	// Initialize first question (hook handles subsequent questions automatically)
+	// Initialize first question when component mounts
 	useEffect(() => {
 		generateNewQuestion();
 	}, [generateNewQuestion]);
 
-	// Help section with hints (passed to SimpleQuizBody)
+	// Help section with toggleable address format reference
 	const helpSection = (
 		<div className="bg-gray-50 rounded-lg p-6 border-l-4 border-green-500">
 			<h2 className="text-xl font-semibold mb-4 text-gray-800">Need Help?</h2>
 			<QuizButton variant="secondary" onClick={() => setShowHints(!showHints)}>
 				{showHints ? "Hide" : "Show"} Address Format Rules
 			</QuizButton>
-			<HintPanel isVisible={showHints} />
+			<GenericHintPanel 
+				isVisible={showHints} 
+				title="📝 Address Format Rules:"
+				items={NETWORK_ADDRESS_HINTS}
+			/>
 		</div>
 	);
 
@@ -192,25 +192,7 @@ function Index() {
 				/>
 			}
 		>
-			{/* ================================================================== */}
-			{/* STEP 3 COMPLETE - USING SimpleQuizBody COMPONENT */}
-			{/* ================================================================== */}
-			{/* 
-			Massive UI simplification achieved:
-			- 200+ lines of custom UI replaced with SimpleQuizBody component
-			- All original styling and behavior preserved
-			- Same green borders, gradient display, button variants, keyboard shortcuts
-			- Future quiz sites can now use this same pattern with minimal code
-			
-			Future agents: This is the new standard pattern for simple quiz sites:
-			1. Configure useQuizLogic hook with site-specific onQuestionGenerate
-			2. Create questionRenderer, isCorrectAnswer, generateFeedback functions  
-			3. Pass everything to SimpleQuizBody component
-			4. Add optional helpSection for hints/rules
-			
-			Total code reduction: ~150 lines → ~20 lines for new quiz sites!
-			*/}
-
+			{/* Network Address Practice Quiz Interface */}
 			<SimpleQuizBody
 				quizLogic={quizLogic}
 				currentQuestion={currentQuestion}

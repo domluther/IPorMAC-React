@@ -3,7 +3,7 @@ import {
 	detectCurrentSite,
 	GCSE_NAVIGATION_MENU,
 } from "@/lib/navigationConfig";
-import { SiteNavigation } from "./reusable/SiteNavigation";
+import { SiteNavigation } from "./SiteNavigation";
 
 interface HeaderProps {
 	scoreButton?: ReactNode;
@@ -12,7 +12,7 @@ interface HeaderProps {
 }
 
 export function Header({ scoreButton, title, subtitle }: HeaderProps) {
-	// Get current site configuration for navigation
+	// Auto-detect current site for navigation highlighting
 	const currentSiteId = detectCurrentSite();
 
 	return (

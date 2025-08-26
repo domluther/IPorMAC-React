@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 import type { ScoreManager } from "@/lib/scoreManager";
 import { cn } from "@/lib/utils";
 import { Button } from "../ui/button";
@@ -25,6 +25,7 @@ export function StatsModal({
 	title = "Your Progress",
 }: StatsModalProps) {
 	const headerIcon = "🏆";
+	const titleId = useId();
 
 	// Handle Escape key
 	useEffect(() => {
@@ -59,15 +60,29 @@ export function StatsModal({
 	return (
 		<div
 			className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby={titleId}
 			onClick={onClose}
+			onKeyDown={(e) => {
+				if (e.key === "Escape") {
+					onClose();
+				}
+			}}
+			tabIndex={-1}
 		>
 			<div
 				className="bg-white rounded-lg shadow-xl max-w-xl w-full max-h-[80vh] overflow-hidden"
 				onClick={(e) => e.stopPropagation()}
+				onKeyDown={(e) => e.stopPropagation()}
+				role="document"
 			>
 				{/* Header */}
 				<div className="bg-gradient-to-r from-gray-700 to-gray-900 text-white px-6 py-4 flex items-center justify-between">
-					<h2 className="text-2xl font-bold flex items-center gap-2">
+					<h2
+						id={titleId}
+						className="text-2xl font-bold flex items-center gap-2"
+					>
 						{headerIcon} {title}
 					</h2>
 					<button

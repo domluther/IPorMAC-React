@@ -41,7 +41,7 @@ export function useQuizLogic({
 
 	// Handle answer selection with scoring
 	const handleAnswerSelect = useCallback(
-		(answerId: number, isCorrect: boolean, questionData?: any) => {
+		(answerId: number, isCorrect: boolean, questionData?: unknown) => {
 			// Record score with configurable points
 			const questionKey = `quiz-${Date.now()}`;
 			const earnedPoints = isCorrect ? correctPoints : 0;
@@ -49,8 +49,10 @@ export function useQuizLogic({
 				questionKey,
 				earnedPoints,
 				maxPoints,
-				questionData?.type,
-				questionData?.address,
+				// Type assertion for questionData properties (safe since it's optional)
+				(questionData as { type?: string; address?: string } | undefined)?.type,
+				(questionData as { type?: string; address?: string } | undefined)
+					?.address,
 			);
 
 			// Update streak
