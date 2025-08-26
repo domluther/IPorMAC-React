@@ -1,10 +1,10 @@
 import { X } from "lucide-react";
 import { useEffect } from "react";
-import { Button } from "../ui/button";
-import { Progress } from "../ui/progress";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import type { ScoreManager } from "@/lib/scoreManager";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Progress } from "../ui/progress";
 
 interface StatsModalProps {
 	isOpen: boolean;
@@ -18,13 +18,13 @@ interface StatsModalProps {
  * Reusable statistics modal for GCSE CS practice sites
  * Shows level progress, statistics, and breakdown by category
  */
-export function StatsModal({ 
-	isOpen, 
-	onClose, 
+export function StatsModal({
+	isOpen,
+	onClose,
 	scoreManager,
 	title = "Your Progress",
 }: StatsModalProps) {
-	const headerIcon = "🏆"
+	const headerIcon = "🏆";
 
 	// Handle Escape key
 	useEffect(() => {
@@ -103,14 +103,21 @@ export function StatsModal({
 								{overallStats.nextLevel && (
 									<CardContent className="mx-4 pt-4 rounded-md bg-white/20 backdrop-blur-sm">
 										<div className="flex justify-between items-center mb-2 text-sm font-semibold">
-											<span>Progress to {overallStats.nextLevel.emoji} {overallStats.nextLevel.title}</span>
-											<span>{overallStats.nextLevel.minPoints -
-														overallStats.totalPoints}{" "}
-													points needed
-                                            </span>
+											<span>
+												Progress to {overallStats.nextLevel.emoji}{" "}
+												{overallStats.nextLevel.title}
+											</span>
+											<span>
+												{Math.max(
+													0,
+													overallStats.nextLevel.minPoints -
+														overallStats.totalPoints,
+												)}{" "}
+												points needed
+											</span>
 										</div>
-										<Progress 
-											value={overallStats.progress} 
+										<Progress
+											value={overallStats.progress}
 											className="h-2 mb-3 [&>div]:bg-green-600 "
 										/>
 										{/* Detailed requirements */}
@@ -155,7 +162,9 @@ export function StatsModal({
 											<div className="text-2xl font-bold text-blue-600">
 												{overallStats.totalAttempts}
 											</div>
-											<div className="text-sm text-gray-600">Total Attempts</div>
+											<div className="text-sm text-gray-600">
+												Total Attempts
+											</div>
 										</div>
 										<div className="bg-green-50 rounded-lg p-4 text-center border-l-4 border-green-500">
 											<div className="text-2xl font-bold text-green-600">
@@ -182,38 +191,42 @@ export function StatsModal({
 								</CardHeader>
 								<CardContent>
 									<div className="space-y-3">
-										{Object.entries(typeStats).map(([type, stats]) => (
-                                            stats.attempts > 0 &&
-											(<div
-												key={type}
-												className="bg-gray-50 rounded-lg p-4 flex items-center justify-between"
-											>
-												<div>
-													<div className="font-semibold text-lg">
-														{type === "none" ? "Invalid Items" : type}
-													</div>
-													<div className="text-sm text-gray-600">
-														{stats.correct} correct out of {stats.attempts}{" "}
-														attempts
-													</div>
-												</div>
-												<div className="text-right">
+										{Object.entries(typeStats).map(
+											([type, stats]) =>
+												stats.attempts > 0 && (
 													<div
-														className={cn(
-															"text-2xl font-bold",
-															stats.accuracy >= 80
-																? "text-green-600"
-																: stats.accuracy >= 60
-																	? "text-yellow-600"
-																	: "text-red-600",
-														)}
+														key={type}
+														className="bg-gray-50 rounded-lg p-4 flex items-center justify-between"
 													>
-														{Math.round(stats.accuracy)}%
+														<div>
+															<div className="font-semibold text-lg">
+																{type === "none" ? "Invalid Items" : type}
+															</div>
+															<div className="text-sm text-gray-600">
+																{stats.correct} correct out of {stats.attempts}{" "}
+																attempts
+															</div>
+														</div>
+														<div className="text-right">
+															<div
+																className={cn(
+																	"text-2xl font-bold",
+																	stats.accuracy >= 80
+																		? "text-green-600"
+																		: stats.accuracy >= 60
+																			? "text-yellow-600"
+																			: "text-red-600",
+																)}
+															>
+																{Math.round(stats.accuracy)}%
+															</div>
+															<div className="text-xs text-gray-500">
+																accuracy
+															</div>
+														</div>
 													</div>
-													<div className="text-xs text-gray-500">accuracy</div>
-												</div>
-											</div>)
-										))}
+												),
+										)}
 									</div>
 								</CardContent>
 							</Card>
@@ -233,17 +246,10 @@ export function StatsModal({
 
 				{/* Footer */}
 				<div className="px-6 py-4 bg-gray-50 flex justify-between items-center gap-4">
-					<Button
-						variant="destructive"
-						onClick={handleResetScores}
-					>
+					<Button variant="destructive" onClick={handleResetScores}>
 						Reset All Scores
 					</Button>
-					<Button
-						onClick={onClose}
-					>
-						Close
-					</Button>
+					<Button onClick={onClose}>Close</Button>
 				</div>
 			</div>
 		</div>

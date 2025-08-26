@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
+import type { NavMenuItem } from "@/lib/navigationConfig";
 import type { ScoreManager } from "@/lib/scoreManager";
-import type { NavMenuItem } from "@/lib/siteConfig";
 
 // Quiz Framework Types
 export interface QuizQuestion<T = any> {

@@ -1,10 +1,14 @@
 import { ChevronDown, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button } from "../ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "../ui/dropdown-menu";
-import { Badge } from "../ui/badge";
-import type { NavMenuItem } from "@/lib/siteConfig";
+import type { NavMenuItem } from "@/lib/navigationConfig";
 import { cn } from "@/lib/utils";
+import { Button } from "../ui/button";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 
 interface SiteNavigationProps {
 	/** Navigation menu items */
@@ -23,12 +27,12 @@ interface SiteNavigationProps {
  * Reusable site navigation component for GCSE CS practice sites
  * Uses shadcn/ui dropdown menu with responsive design
  */
-export function SiteNavigationV2({
+export function SiteNavigation({
 	menuItems,
 	currentSiteId,
 	title = "GCSE CS Tools",
 	icon = "🎓",
-	compact = false
+	compact = false,
 }: SiteNavigationProps) {
 	const [isOpen, setIsOpen] = useState(false);
 
@@ -62,7 +66,9 @@ export function SiteNavigationV2({
 							<Menu className="h-5 w-5" />
 						) : (
 							<>
-								<span className="hidden xl:block">{icon} {title}</span>
+								<span className="hidden xl:block">
+									{icon} {title}
+								</span>
 								<Menu className="xl:hidden h-5 w-5" />
 							</>
 						)}
@@ -74,12 +80,8 @@ export function SiteNavigationV2({
 						/>
 					</Button>
 				</DropdownMenuTrigger>
-				
-				<DropdownMenuContent 
-					className="w-80 p-0"
-					align="start"
-					sideOffset={8}
-				>
+
+				<DropdownMenuContent className="w-80 p-0" align="start" sideOffset={8}>
 					{/* Header */}
 					<div className="bg-gradient-to-r from-gray-700 to-gray-900 text-white px-4 py-3 font-semibold uppercase text-sm">
 						Computer Science Practice
@@ -100,17 +102,14 @@ export function SiteNavigationV2({
 									target="_blank"
 									rel="noopener noreferrer"
 								>
-									<div className="font-bold group-hover:text-indigo-600 transition-colors">
-										{item.title}
+									<div className="flex flex-col space-y-1">
+										<div className="font-bold text-lg text-center group-hover:text-indigo-600 transition-colors">
+											{item.title}
+										</div>
+										<div className="text-sm text-gray-600">
+											{item.description}
+										</div>
 									</div>
-									<div className="text-sm text-gray-600 mt-1">
-										{item.description}
-									</div>
-									{currentSiteId === item.id && (
-										<Badge variant="secondary" className="mt-2 text-xs">
-											Current Site
-										</Badge>
-									)}
 								</a>
 							</DropdownMenuItem>
 						))}

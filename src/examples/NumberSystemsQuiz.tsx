@@ -1,24 +1,29 @@
 /**
  * GCSE CS Practice Sites - Reusable Component Library
- * 
+ *
  * This file demonstrates how to use the reusable components for creating
  * consistent GCSE CS practice sites with minimal setup.
  */
 
-import { useState, useEffect } from "react";
-import { QuizLayout } from "../components/reusable/QuizLayout";
+import { useEffect, useState } from "react";
 import { QuizFramework } from "../components/reusable/QuizFramework";
+import { QuizLayout } from "../components/reusable/QuizLayout";
 import { StatsModal } from "../components/reusable/StatsModal";
 import { ScoreButton } from "../components/ScoreButton";
-import { getSiteConfig, detectCurrentSite } from "../lib/siteConfig";
+import { detectCurrentSite } from "../lib/navigationConfig";
 import { ScoreManager } from "../lib/scoreManager";
+import { getSiteConfig } from "../lib/siteConfig";
 
 // Example: Number Systems Quiz Implementation
 interface NumberSystemQuestion {
 	number: string;
 	fromBase: number;
 	toBase: number;
-	type: "binary-to-decimal" | "decimal-to-binary" | "hex-to-decimal" | "decimal-to-hex";
+	type:
+		| "binary-to-decimal"
+		| "decimal-to-binary"
+		| "hex-to-decimal"
+		| "decimal-to-hex";
 }
 
 const QUIZ_ANSWERS = [
@@ -36,14 +41,21 @@ export function NumberSystemsQuiz() {
 	// 1. Get site configuration
 	const currentSiteKey = detectCurrentSite();
 	const siteConfig = getSiteConfig(currentSiteKey);
-	
-		// Score manager
+
+	// Score manager
 	const [scoreManager] = useState(() => new ScoreManager(siteConfig.siteKey));
-	const [overallStats, setOverallStats] = useState(() => scoreManager.getOverallStats());
-	
+	const [overallStats, setOverallStats] = useState(() =>
+		scoreManager.getOverallStats(),
+	);
+
 	// 3. Quiz state
-	const [currentQuestion, setCurrentQuestion] = useState<NumberSystemQuestion | null>(null);
-	const [feedback, setFeedback] = useState<{ isCorrect: boolean; message: string; explanation?: string } | null>(null);
+	const [currentQuestion, setCurrentQuestion] =
+		useState<NumberSystemQuestion | null>(null);
+	const [feedback, setFeedback] = useState<{
+		isCorrect: boolean;
+		message: string;
+		explanation?: string;
+	} | null>(null);
 	const [showStatsModal, setShowStatsModal] = useState(false);
 	const [showHints, setShowHints] = useState(false);
 	const [streak, setStreak] = useState(0);
@@ -55,11 +67,13 @@ export function NumberSystemsQuiz() {
 		// Simulate loading
 		setTimeout(() => {
 			const types: NumberSystemQuestion["type"][] = [
-				"binary-to-decimal", "decimal-to-binary", 
-				"hex-to-decimal", "decimal-to-hex"
+				"binary-to-decimal",
+				"decimal-to-binary",
+				"hex-to-decimal",
+				"decimal-to-hex",
 			];
 			const type = types[Math.floor(Math.random() * types.length)];
-			
+
 			let question: NumberSystemQuestion;
 			switch (type) {
 				case "binary-to-decimal":
@@ -67,7 +81,7 @@ export function NumberSystemsQuiz() {
 						number: Math.floor(Math.random() * 255).toString(2),
 						fromBase: 2,
 						toBase: 10,
-						type
+						type,
 					};
 					break;
 				case "decimal-to-binary":
@@ -75,15 +89,17 @@ export function NumberSystemsQuiz() {
 						number: Math.floor(Math.random() * 255).toString(),
 						fromBase: 10,
 						toBase: 2,
-						type
+						type,
 					};
 					break;
 				case "hex-to-decimal":
 					question = {
-						number: Math.floor(Math.random() * 255).toString(16).toUpperCase(),
+						number: Math.floor(Math.random() * 255)
+							.toString(16)
+							.toUpperCase(),
 						fromBase: 16,
 						toBase: 10,
-						type
+						type,
 					};
 					break;
 				case "decimal-to-hex":
@@ -91,11 +107,11 @@ export function NumberSystemsQuiz() {
 						number: Math.floor(Math.random() * 255).toString(),
 						fromBase: 10,
 						toBase: 16,
-						type
+						type,
 					};
 					break;
 			}
-			
+
 			setCurrentQuestion(question);
 			setIsLoading(false);
 		}, 300);
@@ -106,19 +122,19 @@ export function NumberSystemsQuiz() {
 		if (!currentQuestion) return;
 
 		const isCorrect = answerId === 1; // For demo purposes, answer 1 is always correct
-		
+
 		// Update scores
 		// For multiple choice quizzes: always use 100 as maxScore (binary correct/incorrect)
 		// - Correct answer gets 100 points out of 100 (100% = marked as correct)
 		// - Incorrect answer gets 0 points out of 100 (0% = marked as incorrect)
-		// 
+		//
 		// Note: Trace table quizzes use different scoring (e.g., 4/20, 6/6) for partial credit
 		// but simple quizzes like this are all-or-nothing
 		scoreManager.recordScore(
 			`${currentQuestion.type}-${Date.now()}`,
-			isCorrect ? 100 : 0,  // Score: 100 (correct) or 0 (incorrect)
-			100,                  // MaxScore: Always 100 for multiple choice
-			currentQuestion.type
+			isCorrect ? 100 : 0, // Score: 100 (correct) or 0 (incorrect)
+			100, // MaxScore: Always 100 for multiple choice
+			currentQuestion.type,
 		);
 
 		// Update streak
@@ -133,9 +149,9 @@ export function NumberSystemsQuiz() {
 		setFeedback({
 			isCorrect,
 			message: isCorrect ? "Correct! Well done! 🎉" : "Incorrect. Try again!",
-			explanation: isCorrect 
+			explanation: isCorrect
 				? `${currentQuestion.number} in base ${currentQuestion.fromBase} converts correctly to base ${currentQuestion.toBase}.`
-				: `The correct answer is different. ${currentQuestion.number} in base ${currentQuestion.fromBase} needs careful conversion.`
+				: `The correct answer is different. ${currentQuestion.number} in base ${currentQuestion.fromBase} needs careful conversion.`,
 		});
 	};
 
@@ -164,10 +180,18 @@ export function NumberSystemsQuiz() {
 		<div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
 			<h3 className="font-bold text-blue-800 mb-2">💡 Number Systems Hints</h3>
 			<div className="text-sm space-y-2 text-blue-700">
-				<p><strong>Binary:</strong> Uses base 2 (0, 1)</p>
-				<p><strong>Decimal:</strong> Uses base 10 (0-9)</p>
-				<p><strong>Hexadecimal:</strong> Uses base 16 (0-9, A-F)</p>
-				<p><strong>Tip:</strong> Break down large numbers step by step</p>
+				<p>
+					<strong>Binary:</strong> Uses base 2 (0, 1)
+				</p>
+				<p>
+					<strong>Decimal:</strong> Uses base 10 (0-9)
+				</p>
+				<p>
+					<strong>Hexadecimal:</strong> Uses base 16 (0-9, A-F)
+				</p>
+				<p>
+					<strong>Tip:</strong> Break down large numbers step by step
+				</p>
 			</div>
 		</div>
 	);
@@ -192,11 +216,15 @@ export function NumberSystemsQuiz() {
 			}
 		>
 			<QuizFramework
-				question={currentQuestion ? {
-					id: `${currentQuestion.type}-${Date.now()}`,
-					content: currentQuestion,
-					correctAnswer: 1 // For demo purposes
-				} : null}
+				question={
+					currentQuestion
+						? {
+								id: `${currentQuestion.type}-${Date.now()}`,
+								content: currentQuestion,
+								correctAnswer: 1, // For demo purposes
+							}
+						: null
+				}
 				answers={QUIZ_ANSWERS}
 				questionRenderer={questionRenderer}
 				streak={streak}

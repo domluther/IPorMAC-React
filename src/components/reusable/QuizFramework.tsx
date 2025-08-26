@@ -1,8 +1,8 @@
-import { useState, useEffect, type ReactNode } from "react";
+import { type ReactNode, useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
+import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { cn } from "@/lib/utils";
 
 interface QuizQuestion<T = any> {
 	id: string;
@@ -67,7 +67,7 @@ export function QuizFramework<T = any>({
 	showHints = false,
 	onToggleHints,
 	title = "Practice Quiz",
-	instructions = "Select the correct answer"
+	instructions = "Select the correct answer",
 }: QuizFrameworkProps<T>) {
 	const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
@@ -75,7 +75,7 @@ export function QuizFramework<T = any>({
 	useEffect(() => {
 		const handleKeyPress = (e: KeyboardEvent) => {
 			// Answer shortcuts (1-9)
-			const num = parseInt(e.key);
+			const num = parseInt(e.key, 10);
 			if (num >= 1 && num <= answers.length && !feedback) {
 				onAnswerSelect(num);
 				return;
@@ -132,9 +132,7 @@ export function QuizFramework<T = any>({
 							</Badge>
 						)}
 					</div>
-					{instructions && (
-						<p className="text-gray-600">{instructions}</p>
-					)}
+					{instructions && <p className="text-gray-600">{instructions}</p>}
 				</CardHeader>
 			</Card>
 
@@ -146,9 +144,7 @@ export function QuizFramework<T = any>({
 						<CardHeader>
 							<CardTitle>Question</CardTitle>
 						</CardHeader>
-						<CardContent>
-							{questionRenderer(question.content)}
-						</CardContent>
+						<CardContent>{questionRenderer(question.content)}</CardContent>
 					</Card>
 
 					{/* Answer Options */}
@@ -161,11 +157,18 @@ export function QuizFramework<T = any>({
 								{answers.map((answer) => (
 									<Button
 										key={answer.id}
-										variant={selectedAnswer === answer.id ? "default" : "outline"}
+										variant={
+											selectedAnswer === answer.id ? "default" : "outline"
+										}
 										className={cn(
 											"h-auto p-4 text-left justify-start",
-											feedback && question.correctAnswer === answer.id && "bg-green-100 border-green-500 text-green-800",
-											feedback && selectedAnswer === answer.id && question.correctAnswer !== answer.id && "bg-red-100 border-red-500 text-red-800"
+											feedback &&
+												question.correctAnswer === answer.id &&
+												"bg-green-100 border-green-500 text-green-800",
+											feedback &&
+												selectedAnswer === answer.id &&
+												question.correctAnswer !== answer.id &&
+												"bg-red-100 border-red-500 text-red-800",
 										)}
 										onClick={() => handleAnswerClick(answer.id)}
 										disabled={!!feedback}
@@ -184,20 +187,26 @@ export function QuizFramework<T = any>({
 
 					{/* Feedback Display */}
 					{feedback && (
-						<Card className={cn(
-							"border-2",
-							feedback.isCorrect ? "border-green-500 bg-green-50" : "border-red-500 bg-red-50"
-						)}>
+						<Card
+							className={cn(
+								"border-2",
+								feedback.isCorrect
+									? "border-green-500 bg-green-50"
+									: "border-red-500 bg-red-50",
+							)}
+						>
 							<CardContent className="pt-6">
 								<div className="flex items-start gap-3">
 									<div className="text-2xl">
 										{feedback.isCorrect ? "✅" : "❌"}
 									</div>
 									<div className="flex-1">
-										<p className={cn(
-											"font-semibold mb-2",
-											feedback.isCorrect ? "text-green-800" : "text-red-800"
-										)}>
+										<p
+											className={cn(
+												"font-semibold mb-2",
+												feedback.isCorrect ? "text-green-800" : "text-red-800",
+											)}
+										>
 											{feedback.message}
 										</p>
 										{feedback.explanation && (
@@ -218,7 +227,9 @@ export function QuizFramework<T = any>({
 					<Card className="bg-gray-50">
 						<CardContent className="pt-4">
 							<div className="text-sm text-gray-600 space-y-1">
-								<p><strong>Keyboard Shortcuts:</strong></p>
+								<p>
+									<strong>Keyboard Shortcuts:</strong>
+								</p>
 								<p>• Press 1-{answers.length} to select answers</p>
 								<p>• Press Enter or Space for next question</p>
 								{onToggleHints && <p>• Press H to toggle hints</p>}
@@ -234,10 +245,7 @@ export function QuizFramework<T = any>({
 							<CardHeader>
 								<div className="flex items-center justify-between">
 									<CardTitle>Need Help?</CardTitle>
-									<Button
-										variant="outline"
-										onClick={onToggleHints}
-									>
+									<Button variant="outline" onClick={onToggleHints}>
 										{showHints ? "Hide" : "Show"} Hints
 									</Button>
 								</div>
@@ -246,11 +254,7 @@ export function QuizFramework<T = any>({
 					)}
 
 					{/* Hint Panel */}
-					{hintPanel && showHints && (
-						<div>
-							{hintPanel}
-						</div>
-					)}
+					{hintPanel && showHints && <div>{hintPanel}</div>}
 				</div>
 			</div>
 		</div>
