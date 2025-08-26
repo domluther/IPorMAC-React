@@ -23,7 +23,7 @@ export function ScoreButton({
 			</span>
 			{/* Compact text on smaller screens */}
 			<span className="xl:hidden">
-				📊 {levelEmoji} {points} pts
+				{levelEmoji} {points} pts
 			</span>
 		</button>
 	);
