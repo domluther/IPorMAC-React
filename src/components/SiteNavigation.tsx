@@ -1,4 +1,4 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Menu } from "lucide-react";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -80,7 +80,7 @@ export function SiteNavigation() {
 	}, []);
 
 	return (
-		<nav className="nav-dropdown absolute top-5 left-8 z-50">
+		<nav className="nav-dropdown absolute top-3 left-3 xl:top-5 xl:left-8 z-50">
 			<button
 				type="button"
 				className={cn(
@@ -93,7 +93,9 @@ export function SiteNavigation() {
 				aria-haspopup="true"
 				aria-expanded={isOpen}
 			>
-				🎓 GCSE CS Tools
+				{/* Full text on larger screens, hamburger on smaller */}
+				<span className="hidden xl:block">🎓 GCSE CS Tools</span>
+				<Menu className="xl:hidden h-5 w-5" />
 				<ChevronDown
 					className={cn(
 						"h-4 w-4 transition-transform duration-200",

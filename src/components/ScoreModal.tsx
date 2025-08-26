@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { useEffect } from "react";
 import type { ScoreManager } from "@/lib/scoreManager";
 import { cn } from "@/lib/utils";
 
@@ -9,6 +10,20 @@ interface ScoreModalProps {
 }
 
 export function ScoreModal({ isOpen, onClose, scoreManager }: ScoreModalProps) {
+	// Handle Escape key
+	useEffect(() => {
+		const handleEscape = (e: KeyboardEvent) => {
+			if (e.key === "Escape" && isOpen) {
+				onClose();
+			}
+		};
+
+		if (isOpen) {
+			document.addEventListener("keydown", handleEscape);
+			return () => document.removeEventListener("keydown", handleEscape);
+		}
+	}, [isOpen, onClose]);
+
 	if (!isOpen) return null;
 
 	const overallStats = scoreManager.getOverallStats();
@@ -26,8 +41,14 @@ export function ScoreModal({ isOpen, onClose, scoreManager }: ScoreModalProps) {
 	};
 
 	return (
-		<div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-			<div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+		<div
+			className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+			onClick={onClose}
+		>
+			<div
+				className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[80vh] overflow-hidden"
+				onClick={(e) => e.stopPropagation()}
+			>
 				{/* Header */}
 				<div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white px-6 py-4 flex items-center justify-between">
 					<h2 className="text-2xl font-bold flex items-center gap-2">

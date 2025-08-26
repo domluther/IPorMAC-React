@@ -1,6 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useEffect, useState } from "react";
+import { Header } from "@/components/Header";
 import { HintPanel } from "@/components/HintPanel";
+import { ScoreButton } from "@/components/ScoreButton";
 import { ScoreModal } from "@/components/ScoreModal";
 import type { AddressData, AddressType } from "@/lib/addressGenerator";
 import { generateRandomAddress } from "@/lib/addressGenerator";
@@ -24,7 +26,11 @@ function Index() {
 	const [isCorrect, setIsCorrect] = useState(false);
 	const [streak, setStreak] = useState(0);
 	const [streakEmojis, setStreakEmojis] = useState("");
-	const [scoreText, setScoreText] = useState("Scores (0%)");
+	const [levelData, setLevelData] = useState({
+		emoji: "🥚",
+		title: "Network Newbie",
+		points: 0,
+	});
 
 	// UI state
 	const [showScoreModal, setShowScoreModal] = useState(false);
@@ -51,9 +57,11 @@ function Index() {
 	const updateScoreButton = useCallback(() => {
 		const stats = scoreManager.getOverallStats();
 		const totalPoints = stats.totalCorrect;
-		setScoreText(
-			`${stats.level.emoji} ${stats.level.title} (${totalPoints} pts)`,
-		);
+		setLevelData({
+			emoji: stats.level.emoji,
+			title: stats.level.title,
+			points: totalPoints,
+		});
 	}, [scoreManager]);
 
 	const handleAnswer = useCallback(
@@ -171,16 +179,19 @@ function Index() {
 
 	return (
 		<>
-			<button
-				onClick={() => setShowScoreModal(true)}
-				className="fixed top-5 right-8 px-4 py-3 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 z-10 max-w-xs text-sm whitespace-nowrap overflow-hidden text-ellipsis"
-				type="button"
-			>
-				📊 {scoreText}
-			</button>
+			<Header
+				scoreButton={
+					<ScoreButton
+						levelEmoji={levelData.emoji}
+						levelTitle={levelData.title}
+						points={levelData.points}
+						onClick={() => setShowScoreModal(true)}
+					/>
+				}
+			/>
 
 			{/* Main Content */}
-			<div className="bg-white rounded-b-xl p-6">
+			<div className="bg-white p-6">
 				<div className=" mx-auto">
 					{/* Quiz Section */}
 					<div className="bg-gray-50 rounded-lg p-6 mb-8 border-l-4 border-green-500">
@@ -195,7 +206,7 @@ function Index() {
 						</div>
 
 						{/* Address Display */}
-						<div className="bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-center py-8 px-6 rounded-xl mb-6 font-mono text-3xl font-semibold tracking-wider border-4 border-indigo-600 shadow-lg break-all">
+						<div className="bg-teal-50 text-black text-center py-8 px-6 rounded-xl mb-6 font-mono text-3xl font-semibold tracking-wider border-4 border-indigo-200 shadow-lg break-all">
 							{currentAddress.address}
 						</div>
 
